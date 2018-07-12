@@ -73,10 +73,14 @@ func main() {
 	ctx = context.Background()
 
 	// Create the datastore client
-	client, _ = datastore.NewClient(ctx, projectID)
+	var err error
+	client, err = datastore.NewClient(ctx, projectID)
+	if err != nil {
+		log.Printf("error initializing datastore client: %v\n", err)
+	}
 
-	http.Handle("/", http.FileServer(http.Dir("/static")))
 	http.HandleFunc("/post", writeEntryHandler)
 	http.HandleFunc("/list", listEntriesHandler)
+	http.Handle("/", http.FileServer(http.Dir("/static")))
 	http.ListenAndServe(":8080", nil)
 }

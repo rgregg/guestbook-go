@@ -31,9 +31,9 @@ type GuestEntry struct {
 
 func writeEntryHandler(w http.ResponseWriter, r *http.Request) {
 	// Write a new entry into the guest log
+	log.Print("Received request to write a new entry.\n")
 
 	kind := "GuestEntry"
-
 	id, _ := uuid.NewV4()
 	name := id.String()
 	entryKey := datastore.NameKey(kind, name, nil)
@@ -54,6 +54,7 @@ func writeEntryHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func listEntriesHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("Querying datastore for entries.\n")
 	var entities []GuestEntry
 	q := datastore.NewQuery("GuestEntry").Order("-PostedTime").Limit(20)
 	_, err := client.GetAll(ctx, q, &entities)
@@ -63,12 +64,14 @@ func listEntriesHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
+	log.Print("Returning entries to caller.\n")
 	json, err := json.Marshal(entities)
 	fmt.Fprintf(w, "%s", json)
 }
 
 func main() {
 
+	log.Print("Addressbook app loading\n")
 	// Initialize data store
 	ctx = context.Background()
 

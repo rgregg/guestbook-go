@@ -29,15 +29,6 @@ type GuestEntry struct {
 	PostedTime time.Time
 }
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/" {
-		http.Redirect(w, r, "/", http.StatusFound)
-		return
-	}
-
-	fmt.Fprintln(w, "Hello, Gopher Network")
-}
-
 func writeEntryHandler(w http.ResponseWriter, r *http.Request) {
 	// Write a new entry into the guest log
 
@@ -84,10 +75,8 @@ func main() {
 	// Create the datastore client
 	client, _ = datastore.NewClient(ctx, projectID)
 
-	fs := http.FileServer(http.Dir("static"))
-	http.Handle("/", fs)
+	http.Handle("/", http.FileServer(http.Dir("/static")))
 	http.HandleFunc("/post", writeEntryHandler)
 	http.HandleFunc("/list", listEntriesHandler)
-	// http.HandleFunc("/", indexHandler)
 	http.ListenAndServe(":8080", nil)
 }

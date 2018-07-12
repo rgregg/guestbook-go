@@ -3,14 +3,14 @@
 FROM golang
 
 # Copy the local package files to the container's workspace.
-ADD . /go/src/knative/addressbook
+ADD . /go/src/github.com/rgregg/addressbook-go
 
 # Build the outyet command inside the container.
 # (You may fetch or manage dependencies here,
 # either manually or with a tool like "godep".)
-RUN go install knative/addressbook
+RUN go install github.com/rgregg/addressbook-go
 
-ENV GOOGLE_APPLICATION_CREDENTIALS /go/src/knative/addressbook/private-key.json
+ENV GOOGLE_APPLICATION_CREDENTIALS /go/src/github.com/rgregg/addressbook-go/private-key.json
 ENV PROJECT_ID gcpnext-s9-demo
 
 # Run the outyet command by default when the container starts.

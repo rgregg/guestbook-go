@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Serverless address book</title>
+    <link rel="stylesheet" href="/main.css">
+</head>
+<body>
+    <h1>Address Book</h1>
+    <div>
+        <form action="/post" method="GET">
+            Post to the wall: <input id="message" type="text" name="message"><input type="submit">
+        </form>
+    </div>
+    <div>
+        Previous entries <small><a href="#" id="refreshLink">(refresh)</a></small>:
+        <ul id="guestbook-entries">
+            <li>Loading...</li>
+        </ul>    
+    </div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#refreshLink").click(refreshGuestBook);
+        $("form").submit(function() {
+            postGuestBook($("#message").val())
+            event.preventDefault();
+        })
+        refreshGuestBook();
+    })
+
+    function refreshGuestBook() {
+        $.get("/list", null, function(data, status, xhr) {
+            // Success
+            var items = [];
+            $.each(data, function(i, item) {
+                items.push('<li>' + item.Message + '</li>');
+            });
+            $('#guestbook-entries').empty().append(items);
+        }, "json")
+    }
+
+    function postGuestBook(message) {
+        $.get("/post?message=" + encodeURIComponent(message), null, function(data, status, xhr) {
+            $("#message").val("");
+            refreshGuestBook();
+        });
+    }
+</script>
+</html>

@@ -9,8 +9,8 @@ COPY ./static /static
 # Build the outyet command inside the container.
 # (You may fetch or manage dependencies here,
 # either manually or with a tool like "godep".)
-RUN go get -u cloud.google.com/go/datastore
-RUN go get -u github.com/satori/go.uuid
+RUN go get cloud.google.com/go/datastore
+RUN go get github.com/satori/go.uuid
 
 RUN go install github.com/rgregg/guestbook-go
 

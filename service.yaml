@@ -1,0 +1,26 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: guestbook
+  namespace: default
+spec:
+  runLatest:
+    configuration:
+      build:
+        source:
+          git:
+            url: https://github.com/rgregg/guestbook-go.git
+            revision: master
+        template:
+          name: kaniko
+          arguments:
+          - name: IMAGE
+            value: &image gcr.io/rg-demo-1/guestbook
+      revisionTemplate:
+        spec:
+          container:
+            image: *image
+            imagePullPolicy: Always
+            env:
+            - name: PROJECT_ID
+              value: rg-demo-1

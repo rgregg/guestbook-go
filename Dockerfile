@@ -3,7 +3,7 @@
 FROM golang
 
 # Copy the local package files to the container's workspace.
-ADD . /go/src/github.com/rgregg/addressbook-go
+ADD . /go/src/github.com/rgregg/guestbook-go
 COPY ./static /static
 
 # Build the outyet command inside the container.
@@ -12,10 +12,10 @@ COPY ./static /static
 RUN go get -u cloud.google.com/go/datastore
 RUN go get -u github.com/satori/go.uuid
 
-RUN go install github.com/rgregg/addressbook-go
+RUN go install github.com/rgregg/guestbook-go
 
 # Run the outyet command by default when the container starts.
-ENTRYPOINT /go/bin/addressbook-go
+ENTRYPOINT /go/bin/guestbook-go
 
 # Document that the service listens on port 8080.
 EXPOSE 8080

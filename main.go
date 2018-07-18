@@ -16,21 +16,20 @@ import (
 	"github.com/satori/go.uuid"
 )
 
-const ()
-
 var (
 	projectID = os.Getenv("PROJECT_ID")
 	ctx       context.Context
 	client    *datastore.Client
 )
 
+// GuestEntry stores our guestbook comments
 type GuestEntry struct {
 	Message    string
 	PostedTime time.Time
 }
 
+// Write a new entry into the guest log
 func writeEntryHandler(w http.ResponseWriter, r *http.Request) {
-	// Write a new entry into the guest log
 	log.Print("Received request to write a new entry.\n")
 
 	kind := "GuestEntry"
@@ -53,6 +52,7 @@ func writeEntryHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(fmt.Sprintf("Saved %v: %v\n", name, entry.Message)))
 }
 
+// Retrieve entries from cloud datastore
 func listEntriesHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Querying datastore for entries.\n")
 	var entities []GuestEntry
@@ -70,9 +70,8 @@ func listEntriesHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-
 	log.Print("Addressbook app loading\n")
-	// Initialize data store
+
 	ctx = context.Background()
 
 	// Create the datastore client
@@ -81,6 +80,8 @@ func main() {
 	if err != nil {
 		log.Printf("error initializing datastore client: %v\n", err)
 	}
+
+	log.Print("Addressbook app is loaded.\n")
 
 	http.HandleFunc("/post", writeEntryHandler)
 	http.HandleFunc("/list", listEntriesHandler)
